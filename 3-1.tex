@@ -1,0 +1,198 @@
+\documentclass[twocolumn, dvipdfmx, 9pt]{jsarticle}
+
+\usepackage[margin=12truemm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\setcounter{section}{2}
+
+\begin{document}
+
+\section{通信システムのモデル}
+\subsection{Shannonの通信システムモデル}
+
+以下にShannonの通信システムの概略図を図\ref{fig:shannon}に示す．
+情報源から発信されたメッセージは送信機で信号への変換がされ
+送信信号として通信路を通り受信機で到達、
+受信機で受信信号は復号され宛先にメッセージとして到達する。
+この際必ず通信路において雑音が信号に乗り、信号はノイズと一緒に復号される。
+また雑音は抵抗体やICなどの通信路内部の機器から生じる内部雑音と、太陽などの自然や無線通信路上の自動車や電車に由来する人工物由来の外来雑音に分類される。
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.3]{img/shannon.jpg}
+  \caption{通信システムモデル}
+  \label{fig:shannon}
+\end{figure}
+
+\subsubsection{通信システムのモデル化}
+
+実際の通信システムを図\ref{fig:shannon}に当てはめることで通信システムについて深く理解することができる。
+
+CDプレイヤーで音楽を聴く通信システムをモデル化すると、情報源はCD作成前の音楽である。
+送信機はこの音楽を録音、ディジタル化する過程にあたり、通信路は音楽データをCDに書き込み記録されたデータをCDプレイヤーで読み取るという過程に当たる。
+内部雑音は書き込みや読み取り時に発生する電気的や光学的な障害があり、ディスクの傷は外部雑音にあたる。
+受信機はCDプレーヤーの音楽復元部分や再生回路にあたり、宛先は音楽を聴く人間である。
+
+\subsubsection{通信路モデル}
+
+通信路は電線のみで構成されている有線と電波を利用する無線に大別することができ、
+無線よりも有線通信のほうが雑音や障害の対策が施しやすく、早く正確な通信が可能である。
+
+\subsubsection*{A 有線通信路}
+有線通信路のモデルとして、加法モデルを図\ref{fig:yusen}に示す。
+この通信路モデルでは受信信号は送信信号と雑音の和で与えられる。
+
+\begin{figure}[h]
+\centering
+  \includegraphics[scale=0.25]{img/yusen.jpg}
+  \caption{有線通信路の加法性モデル}
+  \label{fig:yusen}
+\end{figure}
+
+\subsubsection*{B 無線通信路}
+
+無線通信路では送信機や受信機の位置の変化などの動的要因や、通信経路の変化を考慮する必要がある。
+特に通信路の特性は時間とともに変化するため、動きの自由がある代わりに通信の性能や速度は有線通信経路よりも劣る。
+
+複数のパルスや連続した正弦波を送信した場合、経路の違いにより到着した信号が重なって強弱のある信号になるフェージングという現象が発生する。
+
+
+\subsubsection{雑音のモデル}
+
+雑音は通信の質に大きな影響を与え、雑音が信号よりも大きくなると通信そのものが不能となってしまう。
+雑音の波形を予測することはできないが、ランダム性に着目して一つの確率過程とみなすと数学的な表現や解析が可能となる。
+
+
+雑音の平均$ m $と分散$ \sigma^{2} $は、雑音の確率密度関数$ p(x) $を用いて
+式\eqref{math:m},\eqref{math:d}のように表される。
+\begin{eqnarray}\label{math:m}
+  m &=& \int^{\infty}_{-\infty} x p \left( x \right) dx \\
+  \label{math:d} \sigma^{2} &=&  \int^{\infty}_{-\infty} \left( x - m \right) ^{2} p \left( x \right) dx
+\end{eqnarray}
+
+
+
+
+\paragraph*{A 連続確率変数（一様分布，レイリー分布）}\par
+
+よく使われる雑音モデルとして、一様分布モデル（図\ref{fig:ichiyou}，式\eqref{eq:ichiyou}）とレイリー分布モデル（図\ref{fig:rayleigh}，式\eqref{eq:rayleigh}）がある。
+
+  \begin{equation}\label{eq:ichiyou}
+    p(x) = 
+    \begin{cases}
+      \dfrac{1}{B - A} & (A \le x \le B) \\
+    0 & (\text{otherwise})
+    \end{cases} \\
+  \end{equation}
+
+  \begin{figure}[h]
+    \centering
+      \includegraphics[scale=0.25]{img/ichiyo.jpg}
+    
+    \caption{一様分布}
+    \label{fig:ichiyou}
+    \end{figure}
+      
+\begin{equation}\label{eq:rayleigh}
+p(x) =
+\begin{cases}
+  \dfrac{x}{\sigma^2} e ^ {-\frac{x^2}{2\sigma^2}} & (x\ge 0) \\
+0 & (x < 0)
+\end{cases}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+  \includegraphics[scale=0.3]{img/rayleigh.jpg}
+
+\caption{レイリー分布}
+\label{fig:rayleigh}
+\end{figure}
+
+\paragraph*{B ガウス雑音（正規分布）}
+
+ガウス雑音の確率密度関数は、式\eqref{eq:gauss:p}の正規分布（ガウス分布）（\ref{fig:gauss}）の式である。
+通信システムの性能評価において正規分布の積分をすることが多いが、この積分の計算は一般に数値解法しかない。
+そこで表現の簡単のために、誤差関数$\operatorname{erf}(x)$（式\eqref{eq:gauss:erf}）、誤差補関数$\operatorname{erfc}(x)$（式\eqref{eq:gauss:erfc}）を定義して
+確率$P(X \le a)$を表すことを考える。
+このとき、確率$P(X \le a)$は式\eqref{eq:gauss:kakuritsu}のように表される。
+
+\begin{align}
+  \label{eq:gauss:p} p(x) &= \dfrac{1}{\sqrt{2 \pi a^2}} e ^ {- \frac{\left( x - m \right) ^{2}}{2 a ^2}} \\
+  \label{eq:gauss:erf} \operatorname{erf}(x) &= \frac{2}{\sqrt{\pi}} \int^{x}{0}e^{-t^2} dt \\
+  \label{eq:gauss:erfc} \operatorname{erfc}(x) &= \frac{2}{\sqrt{\pi}} \int^{\infty}{x}e^{-t^2} dt = 1 - \operatorname{erf}(x) \
+\end{align}
+\begin{equation}
+  \begin{aligned}\label{eq:gauss:kakuritsu}
+    P(X \le a) &= \frac{1}{2} + \frac{1}{2} \operatorname{erf} \left( \frac{a - m}{\sqrt{2}a} \right) \\
+    &= 1 - \frac{1}{2} \operatorname{erfc} \left( \frac{a - m}{\sqrt{2}a} \right)
+  \end{aligned}
+\end{equation}
+
+ \begin{figure}[h]
+    \centering
+  \includegraphics[scale=0.2]{img/gauss.jpg}
+    
+    \caption{正規分布}
+    \label{fig:gauss}
+    \end{figure}
+
+ガウス雑音のスペクトル密度が一定の場合、この雑音のことを白色ガウス雑音と呼ぶ。
+白色雑音は完全にランダムであり、過去の雑音の傾向をいくら見ても次の値が推定できない。
+
+\paragraph*{C 狭帯域ガウス雑音}\par
+図\ref{fig:mitsudo}のように、スペクトル密度が中心周波数$f_0$の近傍に集中しているとき、特にこのガウス雑音を狭帯域ガウス雑音$n(t)$と呼ぶ。
+また、$n(t)$と同じ平均値と分散を持つ同相成分$n_c(t)$と直交成分$n_s(t)$を用いて、$n(t)$は式\eqref{eq:kyotai:n}のように表される。
+ただし、包絡線$V(t)$と位相$\phi (t)$は式\eqref{eq:kyotai:v}、\eqref{eq:kyotai:phi}で定義される。
+受信機に到来する雑音を、フィルタで信号の対域外の不要雑音を除去すると、雑音は狭帯域雑音となる。
+
+\begin{equation}
+    \begin{aligned}\label{eq:kyotai:n}
+      n(t) &= n_c(t) \operatorname{cos} \left( 2 \pi f_0 t \right) - n_s (t) \operatorname{cos} \left( 2 \pi f_0 t + \phi (t) \right) \\
+      &= V(t) \operatorname{cos} \left( 2\pi f_0 t + \phi (t)  \right)
+    \end{aligned}
+ \end{equation}
+ \begin{align}\label{eq:kyotai:v}
+  V(t) &= \sqrt{{n_c}^2 + {n_s}^2 } \; &( V(t) \ge 0) \\
+  \label{eq:kyotai:phi} \phi (t) &= \operatorname{atan2}({n_s(t)},{n_c(t)}) \; &( -\pi \le \phi (t) \le \pi )
+  \end{align}
+
+  \begin{figure}[h]
+    \centering
+  \includegraphics[scale=0.2]{img/spectrum.jpg}
+    
+    \caption{狭帯域ガウス雑音の分布}
+    \label{fig:mitsudo}
+    \end{figure}
+
+\paragraph*{D 正弦波と狭帯域ガウス雑音の合成波}\par
+
+正弦波$A \operatorname{cos}(2\pi f_0 t)$と狭帯域ガウス雑音$n(t)$の合成波は式\eqref{eq:gosei}のように表される。
+ただし、$ U(t)$は包括線、$\theta(t)$は位相であり、それぞれの確率密度関数は式\eqref{eq:U:teigi}、\eqref{eq:theta:teigi}によって定められる。
+それぞれの確率密度関数は式\eqref{eq:gosei:U}、\eqref{eq:gosei:theta}のようになり、特に式\eqref{eq:gosei:U}の分布は中上-Rice分布と呼ばれる。
+
+\begin{align}
+  \label{eq:gosei} A \cos(2\pi f_0 t) + n(t) &= U(t) \cos(2\pi f_0 t + \theta (t)) \\
+  \label{eq:U:teigi} U(t) &= \sqrt{\left\{ A + n_c(t) \right\}^2 + {n_s(t)}^2} \\
+  \label{eq:theta:teigi}  \theta (t) &= \operatorname{atan2}(n_s(t), A + n_c(t)) \\
+  \label{eq:gosei:U} p(U) &= \frac{U}{\sigma_n^2} \operatorname{exp} \left(-\frac{U^2 + A^2}{2\sigma_n^2} \right) I_0\left(\frac{AU}{\sigma_n^2}\right)  \\
+　\label{eq:gosei:theta} p(\theta) &= \frac{e^{-\rho}}{\pi} \left[ 1 + \sqrt{\pi \rho} \cos \theta \left( 1 + \operatorname{erf}\left( \sqrt{\rho} \cos \theta \right) \right) e^{\rho \cos^2 \theta} \right]
+\end{align}
+
+ただし、$I_0(x)$は第1種変形ベッセル関数と呼ばれ、式\eqref{eq:bessel}で定義される。
+また、式\eqref{eq:gosei:theta}中の$ \rho $は正弦波電力と雑音の電力の比であり、\eqref{eq:rho}のように定義される。
+また、実用上常用対数を用いて単位を[dB]として表す場合もある（式\eqref{eq:rho:log}）。
+
+\begin{align}
+  \label{eq:bessel} I_0(x) &= \sum_{k=0}^{\infty} \left(\frac{x}{2}\right)^{2k} \frac{1}{(k!)^2} \\
+  \label{eq:rho} \rho &= \frac{A^2}{2\sigma_n^2} \\
+  \label{eq:rho:log} \rho \rm{[dB]} &= 10 \log_{10} \left( \frac{A^2}{2\sigma_n^2} \right)
+\end{align}
+
+
+  % \begin{thebibliography}
+  % \end{thebibliography}
+
+\end{document}
