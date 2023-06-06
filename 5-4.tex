@@ -1,0 +1,233 @@
+\documentclass[twocolumn, dvipdfmx, 9pt]{jsarticle}
+
+\usepackage[margin=12truemm]{geometry}
+
+\usepackage[labelsep=quad]{caption}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\usepackage{amssymb}
+
+\usepackage{mathtools}
+
+\usepackage{amsmath}
+
+\usepackage{amsfonts}
+
+\setcounter{section}{5}
+\setcounter{subsection}{3}
+
+\usepackage[subrefformat=parens]{subcaption}
+
+\captionsetup{compatibility=false}
+
+\begin{document}
+
+\subsection{標本点におけるISIが0となる条件}
+
+\subsubsection{伝送系のモデル}
+
+ディジタル伝送において最も需要な要件の一つは、受信側での符号判定時の符号間干渉(ISI)が0になることである。
+全体の伝送システムは図\ref{fig:model}に示すモデルを用いて検討される。
+
+通信路の特性はユーザから変更できないので、通信路前後にフィルタを導入してISIを制御する。
+送信された信号は図\ref{fig:model}より送信フィルタ$ G_T (f)$、通信路$C (f)$、受信フィルタ$ G_R (f)$の三つを通るので、２つのフィルタの条件を変化させることでISIの制御を行う。
+
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.9]{img/model.jpg}
+  \caption{通信システムモデル}
+  \label{fig:model}
+\end{figure}
+
+設定条件を求めるために、全体の総合周波数特性$H (f)$に対するインパルス応答$h(t)$を求める。
+このとき、$H(f)$は次式のようになる。
+
+  \begin{equation}\label{eq:shuhasutokusei}
+    H(f) = G_T (f) C (f) G_R (f)
+  \end{equation}
+  
+  $ G_T (f)$、$ G_R (f)$の値は対雑音特性から求める必要があるため一般的な解を示すのは難しい。
+  
+
+  
+  
+
+\subsubsection{ナイキストの第１基準}
+
+インパルス応答$ h (t) $について、インパルス信号が時間 $ T $ ごとに送出されるときにISIがゼロになる条件は式\eqref{eq:daiichi} の通りである。
+この条件を\textbf{ナイキストの第１基準}と呼び、式\eqref{eq:sinctokusei}に示す$ \mathrm{sinc} (\pi f_0 t) $は図\ref{fig:sinctokusei}の通りこの条件を満足する。
+
+
+
+
+\begin{equation}
+\label{eq:daiichi}
+\sin(\pi f_0 t) =
+\left\{
+  \begin{array}{rl}
+  1  & \text{($t = 0$)} \\
+  0  & \text{($t = \pm kT$, $k \in \mathbb{N}$)}
+  \end{array}
+\right.
+\end{equation}
+
+\begin{equation}
+\label{eq:sinctokusei}
+x = \frac{\sin(\pi f_0 t)}{\pi f_0 t} =
+\left\{
+  \begin{array}{rl}
+  1  & \text{($t = 0$)} \\
+  0  & \text{($t = \pm kT$, $k \in \mathbb{N}$)}
+  \end{array}
+\right.
+\end{equation}
+
+
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[scale=1.1]{img/hirogeru.jpg}
+  \caption{ナイキストの第1基準を満たすインパルス応答}
+  \label{fig:sinctokusei}
+\end{figure}
+
+式\eqref{eq:sinctokusei}に示す特性のとき、帯域幅$ f_0 / 2$で毎秒$f=o$個のインパルス信号を伝送できる。
+つまり帯域幅$W$を持つ通信路を通す場合には
+ISIなしで送信できるパルス数は毎秒$2W$となる。
+
+この伝送は$ \mathrm{sinc} (x) $が$ 1/x$に比例して減衰するため、伝送速度、伝送系の周波数特性、受信側での信号判定が完全でない場合は少しの狂いでも大きなISIを生じる。
+解決法は減衰速度を$1/x$よりも早くすることであり、図\ref{fig:hirogeru}のように最小帯域幅よりも帯域幅は少し広げる必要がある。
+
+
+
+
+
+\subsubsection{伝送系の周波数に対するナイキストの第一基準}
+
+\eqref{eq:daiichi}についてインパルス列を乗じて、式\eqref{eq:sinchoku1}のように$T$秒ごとに標本化する。
+
+\begin{equation}
+\label{eq:sinchoku1}
+h(t) = f_0 \sum_{k=-\infty}^{\infty} \delta (f - k f_0) = f_0  \sum_{k=-\infty}^{\infty} \delta ( k f_0 - f)
+\end{equation}
+
+続いて、まず左辺を式\eqref{eq:fourier}を用いて式\eqref{eq:sinchoku2}のようにフーリエ変換する。
+
+\begin{equation}
+\label{eq:fourier}
+I(f) = f_0 \sum_{k=-\infty}^{\infty} \delta( k f_0 - f) = f_0 \sum_{k=-\infty}^{\infty} \delta( k f_0 - f) 
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\label{eq:sinchoku2}
+H(f)  \ast f_0 \sum_{k=-\infty}^{\infty} \delta(f - k f_0) &= \int^{\infty}_{-\infty} H(f') f_0 \sum_{k=-\infty}^{\infty} \delta(f' - f + kf_0) \, df' \\
+&= f_0 \sum_{k=-\infty}^{\infty} H(f - k f_0) \\ 
+&= \frac{1}{T} \sum_{k=-\infty}^{\infty} H(f - k f_0) 
+\end{split}
+\end{equation}
+
+また、右辺のフーリエ変換の結果は\eqref{eq:sahenfourier}より1であるから、式\eqref{eq:kekka}が成り立つ。
+
+\begin{equation}
+\label{eq:sahenfourier}
+ F_\delta (f) = e^0 = 1
+\end{equation}
+
+\begin{equation}
+\label{eq:kekka}
+ f_0 \sum_{k=-\infty}^{\infty} H(f - k f_0) = T
+\end{equation}
+
+この式を$h(t)$に代入した結果が上記のように定数$T$となることがナイキストの第１条件を満たす周波数特性の条件である。
+この条件を満たす特性は無数に存在する。
+
+
+\subsubsection{コサインロールオフ特性}
+
+無数に存在する周波数特性に対して実用上最も重要なものは\textbf{コサインロールオフ特性}であり、式\eqref{eq:rolloff}、図\ref{fig:rolloff}である。
+また、そのインパルス応答は\eqref{eq:rolloffoutou}である。
+ただし、それぞれについて$\alpha$は\textbf{ロールオフ率}と呼ばれる値である。
+
+\begin{equation}
+\label{eq:rolloff}
+H(f) =
+\begin{cases}
+T & \left(|f| \leq (1 - \alpha) \dfrac{f_0}{2}\right) \\
+\dfrac{T}{2}-\dfrac{T}{2} \sin\dfrac{\pi \left(|f| - f_0 / 2 \right)}{\alpha f_0} & \left((1 - \alpha) \dfrac{f_0}{2} < |f| \leq (1 + \alpha)\dfrac{f_0}{2}\right) \\
+0 & \left(|f| > (1 + \alpha)\dfrac{f_0}{2}\right)
+\end{cases}
+\end{equation}
+
+\begin{equation}
+\label{eq:rolloffoutou}
+h(t) = \mathrm{sinc} \left( \frac{ \pi }{T} \right) \dfrac { \cos { \dfrac { \pi \alpha t}{T}}}{1 - \left ( \dfrac{ 2 \alpha t }{ T } \right) ^ 2 }
+\end{equation}
+
+
+
+\begin{figure}[htbp]
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[keepaspectratio, scale=0.9]{img/rolloff_dentatsu.jpg}
+    \subcaption{伝達関数}
+  \end{minipage}
+  \begin{minipage}[b]{0.45\linewidth}
+    \centering
+    \includegraphics[keepaspectratio, scale=0.8]{img/rolloff_impa.jpg}
+    \subcaption{インパルス応答}
+  \end{minipage}
+  \caption{コサインロールオフ特性}
+  
+   \label{fig:rolloff}
+\end{figure}
+
+ロールオフ率$ \alpha = 0$のときは理想低域フィルタと一致し、また$ \alpha = 1$の場合は\textbf{レイズドコサイン}（\textbf{全余弦下降特性}）と呼ばれ、帯域幅が２倍に広がる一方で波形のすその減衰が急速であるという特徴を持っている。
+$ \alpha $ が大きくなるにつれて周波数利用効率は上がる一方、標本点近傍では波形変動が大きくなりタイミングのずれが生じた場合の受信特性が大きく劣化する。
+また$ \alpha $ が小さい場合は位相特性を直線に保ったまま急峻な振幅遮断特性を実現することが難しく、実用的には0.3から1の間に$ \alpha $を設定する場合が多い。
+
+
+\subsubsection{アイダイアグラム}
+
+ISIはオシロスコープによって観察が可能であり、その手法を\textbf{アイダイアグラム}と呼ぶ。
+基準点と他2点で標本化したパルス振幅変調された波形の受信フィルタ出力波形を、図\ref{eye}代表的な3種類の場合に分けて図示する。
+この波形をオシロスコープの垂直入力として、入力パルスのパルス間隔$T$に同期させて掃引することで図\ref{eye}の右端のように信号区間$T$の間に起こりうるすべての波形が重なって表示される。
+
+\begin{figure}[htbp]
+\begin{minipage}[b]{1.0\linewidth}
+
+
+
+  \begin{center}
+   \includegraphics[scale=1]{img/eye_1.jpg}
+  \end{center}
+  \subcaption{帯域制限のない方形波形} 
+
+ \begin{center}
+  \includegraphics[scale=1]{img/eye_2.jpg}
+ \end{center}
+  \subcaption{帯域制限された方形波形（非理想伝送系）} 
+
+ \begin{center}
+  \includegraphics[scale=0.665]{img/eye_3prime.jpg}
+ \end{center}
+  \subcaption{ナイキスト波形（理想伝送系）}
+
+\end{minipage}
+  \caption{2値PAM信号系列とダイアグラム}
+  \label{eye}
+  
+\end{figure}
+
+
+
+この中心部をアイと呼び、上下の開きは\textbf{雑音余裕度}、左右の開きは\textbf{タイミング余裕度}を示している。
+図\ref{eye}より、帯域制限がされた信号ではひずみが生じていて、またサンプル時間においてアイの開きが狭くなっていることがわかる。
+しかし、ナイキスト波形ではサンプル時間における愛の開きが帯域制限のない場合と同じになっている。
+このため、ISIは0になる。
+
+
+
+
+\end{document}
